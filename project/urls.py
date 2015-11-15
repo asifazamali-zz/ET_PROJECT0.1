@@ -17,25 +17,18 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf.urls.static import static
-from django.views.generic.base import TemplateView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    url(r'^$','security.views.home',name='home'),
-    url(r'^contact/','security.views.contact', name = 'contact'),
-    url(r'^about/','project.views.about', name = 'about'),
-    url(r'^upload/','security.views.list1', name = 'upload'),
-    url(r'^find_friend/','security.views.find_friend', name = 'find_friend'),          
-    url(r'^friend/','security.views.friend', name = 'friend'),
-    url(r'^notification/','security.views.notification', name = 'notification'),
-    url(r'^readnotification/','security.views.readnotification', name = 'read_notification'),
-    url(r'^shared/','security.views.shared', name = 'shared'),
-    url(r'^save/','security.views.save', name = 'file_save'),
-    url(r'^save_details/','security.views.save_details', name = 'save_details'),
-    url(r'^update_privacy/','security.views.update_privacy', name = 'update_privacy'),
-    url(r'^quiz/','security.views.quiz',name='quiz'),
+
+    url(r'^$','security.views.quiz',name='home'),
     url(r'^edit/','security.views.edit',name='edit'),
     url(r'^delete/','security.views.delete',name='delete'),
-    url(r'^demo/','security.views.demo', name = 'demo'),    
+    url(r'^publish/','security.views.publish',name='publish'),
+    url(r'^republish/','security.views.republish',name='re_publish'),
+    url(r'^delete_post/','security.views.deletepost',name='delete_post'),
+
+    url(r'^chats/', include('chat.urls'),name='chats'),
     url(r'^register/complete/$','security.views.registration_complete',name='registration_complete'),   
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^admin/', include(admin.site.urls)),
@@ -44,3 +37,4 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns+= static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns+= static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += staticfiles_urlpatterns()

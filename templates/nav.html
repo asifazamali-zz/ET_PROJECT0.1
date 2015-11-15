@@ -8,36 +8,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{%url 'home'%}">Security</a>
+          <a class="navbar-brand" href="{%url 'home'%}">Clicker</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="{%url 'home'%}">Home</a></li>
-            <li><a href="{%url 'shared'%}">Shared</a></li>
-            {%if friend_list or shared_list%}
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                {% for usr in friend_list %}
-                 <form method="POST" action="{% url 'notification' %}">{%csrf_token%}
-                   <li>{{usr.user_name}}<input type="hidden" name="frnd_name" value="{{usr.user_name}}"><input type="submit" value="Accept"></li>
-                 </form>
-                {%endfor%}
-                {%if shared_list%}
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Shared Docs</li>
-                {% for shr in shared_list %}
-                 <form method="POST" action="{% url 'read_notification' %}">{%csrf_token%}
-                   <li><b>{{shr.user_name}}</b>: {{shr.document_name|filename}}
-                     <input type="hidden" name="usr_name" value="{{shr.user_name}}">
-                     <input type="hidden" name="doc_name" value="{{shr.document_name}}">
-                     <input type="submit" value="Read"></li>
-                 </form>
-                {%endfor%}
-                {%endif%}
-              </ul>
-            </li>
-           {%endif%}
+            <!---------------------------------------------- ChatROOM-------------------------------------------------------------->
+            {% if request.user.is_authenticated %}
+            <li><a href="{%url 'chats'%}">ChatRoom</a></li>
+            {% endif %}
+
+
           </ul>
 
           <ul class="nav navbar-nav navbar-right">

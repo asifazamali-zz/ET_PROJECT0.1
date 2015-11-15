@@ -40,6 +40,9 @@ INSTALLED_APPS = (
     'crispy_forms',
     'registration',
     'security',
+    #'polymorphic',
+    #'chatrooms',
+    'chat',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -114,6 +117,12 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"static_in_env","media_root")
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 REGISTRATION_AUTO_LOGIN = True
@@ -127,3 +136,4 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login'
 
 TEMPLATE_DEBUG = True
+
