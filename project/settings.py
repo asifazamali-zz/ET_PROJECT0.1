@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -40,8 +41,6 @@ INSTALLED_APPS = (
     'crispy_forms',
     'registration',
     'security',
-    #'polymorphic',
-    #'chatrooms',
     'chat',
 )
 
@@ -50,10 +49,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'django.middleware.security.SecurityMiddleware',
+
 )
 
 ROOT_URLCONF = 'project.urls'
@@ -120,14 +118,11 @@ MEDIA_ROOT = os.path.join("static_in_env","media_root")
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 REGISTRATION_AUTO_LOGIN = True
-
-SITE_ID = 1
 
 REGISTRATION_OPEN = True
 

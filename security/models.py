@@ -1,15 +1,5 @@
 from django.db import models
-import os
-from django.contrib.auth.models import User
-#from django.contrib.auth import models
-# Create your models here.
 
-# def get_upload_file_name(instance,filename):
-#     #print instance.author
-#     return "uploads/%s/%s" % (instance.user_name,filename)
-# def dummy_function(instance,filename):
-#     #print instance.author
-#     return
 def get_upload_file_name(self,filename):
     print 'get_upload_file_name',self.question,filename
     return "uploads/%s/%s" % (self.question,filename)

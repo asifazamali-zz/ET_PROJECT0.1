@@ -234,4 +234,4 @@ root.putChild("",resource) #the http protocol is up at /
 root.putChild("ws",ws_resource) #the websocket protocol is at /ws
 application = service.Application("chatserver")
 #print 'before interface'
-internet.TCPServer(9000, Site(root),interface='127.0.0.1').setServiceParent(application)
+internet.TCPServer(9000, Site(root),interface='0.0.0.0').setServiceParent(application)

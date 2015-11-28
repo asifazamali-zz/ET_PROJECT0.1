@@ -24,19 +24,36 @@
          var d= document.getElementById('id_option_d');
          var correct= document.getElementById(option_correct).checked=true;
          var image = document.getElementById('image');
-         var img=document.createElement('img');
+         var image_exists = document.getElementById('image_id')
+         var link_exists = document.getElementById('file_link');
          var file_link = document.getElementById('link');
-         var link = document.createElement('a');
-         var t = document.createTextNode("Chat File Link");
-         link.href={{MEDIA_URL}}+'/uploads/chats/'+quest_id+".txt"
-         link.target='_blank'
-         link.appendChild(t)
-         file_link.appendChild(link);
-         img.src=img_path;
-         img.width='500';
-         img.height='508';
-         img.alt='question_image_not_exits';
-         image.appendChild(img);
+
+
+         if(!link_exists){
+            var link = document.createElement('a');
+            var t = document.createTextNode("Chat File Link");
+            link.id ='file_link';
+            link.href='/media/uploads/chats/'+quest_id+".txt";
+            link.target='_blank'
+            link.appendChild(t)
+            file_link.appendChild(link);
+         }
+         else{
+             link_exists.href='/media/uploads/chats/'+quest_id+".txt";
+         }
+         if(!image_exists) {
+             var img = document.createElement('img');
+             img.id = 'image_id';
+             img.src = img_path;
+             img.width = '300';
+             img.height = '250';
+             img.alt = 'question_image_not_exits';
+             image.appendChild(img);
+         }
+         else{
+             image_exists.src=img_path;
+
+         }
          quest.value=question;
          a.value=option_a;
          b.value=option_b;
@@ -52,30 +69,38 @@
   <div class="col-md-2">
 
       {% if ques %}
-        {%if user.is_superuser%}
-          <b>Question{{ques.id}}</b> has posted!<form method="post" action="{%url 'delete_post'%}">
-          {% csrf_token %}
-          <input type="hidden" name="quest_id" value={{ques.id}}>
-          <input type='submit' value='Remove'>
-          </form>
-        
+        {% if user.is_superuser %}
+            <b>Question:{{ ques.question}}</b> has been posted.
+
+            <form action="{% url 'delete_post'%}" method="post">{%csrf_token%}
+                    <input type="hidden" name="quest_id_delete_post" value="{{ ques.id }}">
+                    <input type="submit" value="RemovePost">
+            </form>
+
+            
+      <br>
         {%else%}
-          {% if user.is_authenticated %}
-          <form action ="" method = "POST">{%csrf_token%}
-            <b>Question:</b>{{ques.question}}<br>
-            <img src="{{ques.image.url}}" width='500' height='500'><br>
-            <input type="hidden" name="question_id" value="{{ ques.id }}">
-            <input type="hidden" name="number_of_times" value="{{number_of_times}}">
-            <input type="radio" name="options"  value="0">{{ ques.option_a }}<br>
-            <input type="radio" name="options" value="1">{{ ques.option_b }}<br>
-            <input type="radio" name="options" value="2">{{ ques.option_c }}<br>
-            <input type="radio" name="options" value="3">{{ ques.option_d }}<br>
-            <input type="submit" value="Submit">
-          </form>
-          {%endif%}
+            {% if user.is_authenticated %}
+              <form action ="" method = "POST">{%csrf_token%}
+               <b>{{post}}</b><br>
+                Question: {{ques.question}}<br>
+                <img src="{{ques.image.url}}" width='250' height='250'><br>
+                <input type="hidden" name="number_of_times" value="{{ number_of_times }}"/>
+                <input type="hidden" name="question_id" value="{{ ques.id }}">
+                <input type="radio" name="options"  value="0">{{ ques.option_a }}<br>
+                <input type="radio" name="options" value="1">{{ ques.option_b }}<br>
+                <input type="radio" name="options" value="2">{{ ques.option_c }}<br>
+                <input type="radio" name="options" value="3">{{ ques.option_d }}<br>
+                <input type="submit" value="Submit">
+              </form>
+             {% endif %}
         {%endif%}
       {% else %}
-          {{ submission }}
+
+          <div id="lable2">{{ submission }}</div>
+      {% endif %}
+      {% if user.is_superuser %}
+              <div id='image'></div>
       {% endif %}
 
 
@@ -92,25 +117,45 @@
         <div class="panel-body ">
           <ol style="list-style-type:none">
             {% if uploaded %}
-                <form method="post" id='edit_form' action="{% url 'edit' %}">{% csrf_token %}</form>
-                <form method="post" id='delete_form' action="{% url 'delete' %}">{% csrf_token %}</form>
-                <form method="post" id='post_form' action="{% url 'publish' %}">{% csrf_token %}</form>
-                <form method="post" id='repost_form' action="{% url 're_publish' %}">{% csrf_token %}</form>
+            <table class="table" style="table-layout: fixed; width: 100%">
                 {% for quest in uploaded %}
 
-                  <li>{{  quest.question }}
+                  <tr>
+                    <td  style="word-wrap: break-word" width="250">{{ quest.question }}</td>
+                    <td width="43">
                       <input  type="button" name="edit"
-                              onclick="readQuestion('{{ quest.id }}','{{ quest.question }}','{{ quest.option_a }}','{{ quest.option_b }}','{{ quest.option_c }}','{{ quest.option_d }}','{{ quest.option_correct }}','{{quest.image.url}}')" value="Edit"/>
-                      <input form='delete_form' type="hidden" value="{{ quest.id }}" name="quest_id"/>
-                      <input form='post_form' type="hidden" value="{{ quest.id }}" name="quest_id"/>
-                      <input form='repost_form' type="hidden" value="{{ quest.id }}" name="quest_id"/>
-  
-                      <input form='delete_form' type="submit" name="delete" value="delete">
-                      <input form='post_form' type="submit" name="post" value="Post">
-                      <input form='repost_form' type="submit" name="repost" value="Repost">
-                  </li>
-                    </form>
+                              onclick="readQuestion('{{ quest.id }}','{{ quest.question }}','{{ quest.option_a }}','{{ quest.option_b }}','{{ quest.option_c }}','{{ quest.option_d }}','{{ quest.option_correct }}','{{quest.image.url}}')" value=" Edit "/>
+                    </td>
+                    <td width="58">
+                      <form method="post"  action="{% url 'delete' %}">{% csrf_token %}
+
+                      <input  type="hidden" value="{{ quest.id }}" name="quest_id_delete"/>
+                      <input  type="submit" name="delete" value="Delete">
+                      </form>
+
+                    </td>
+                    <td width="47">
+                      <form method="post"  action="{% url 'publish' %}">{% csrf_token %}
+
+                      <input  type="hidden" value="{{ quest.id }}" name="quest_id_post"/>
+                      <input  type="submit" name="post" value=" Post ">
+                      </form>
+
+                   </td>
+                   <td>
+                      <form method="post"  action="{% url 're_publish' %}">{% csrf_token %}
+
+                      <input type="hidden" value="{{ quest.id }}" name="quest_id_repost"/>
+                      <input type="submit" name="repost" value="Repost">
+                      </form>
+
+                   </td>
+
+                  </tr>
+
+
                 {% endfor %}
+            </table>
             {% endif %}
           </ol>
         </div>
@@ -140,9 +185,24 @@
      </form>
      <div id="link"></div>
   </div>
-  <div class="col-md-6">
-    <div id="image" ></div>
-  </div> 
+ <div class="col-md-3">
+      <ol style="list-style-type:none">
+      <b>Previous Review:</b>
+      <li> Option_a:{{option_a}}</li>
+      <li> Option_b:{{option_b}}</li>
+      <li> Option_c:{{option_c}}</li>
+      <li> Option_d:{{option_d}}</li>
+      </ol>
+  </div>
+  <div class="col-md-2">
+      <b>Post Review:</b>
+      <ol style="list-style-type:none">
+      <li> Option_a:{{re_option_a}}</li>
+      <li> Option_b:{{re_option_b}}</li>
+      <li> Option_c:{{re_option_c}}</li>
+      <li> Option_d:{{re_option_d}}</li>
+      </ol>
+  </div>
 </div>
 {% endif %}
 {% endblock %}

@@ -26,19 +26,19 @@ def edit(request):
     return HttpResponseRedirect('/')
 
 def delete(request):
-    quest=Question.objects.filter(id=request.POST.get('quest_id'))
+    quest=Question.objects.filter(id=request.POST.get('quest_id_delete'))
     if (quest):
         quest.delete()
     print "inside delete"
     return HttpResponseRedirect('/')
 def deletepost(request):
-    id=request.POST.get("quest_id")
-    print "deletepost quest_id",id
+    id=request.POST.get("quest_id_delete_post")
+    print "deletepost() quest_id",id
     post=Posted_Question.objects.get(question_id=str(id))
     post.delete()
     return HttpResponseRedirect('/')
 def republish(request):
-    id=request.POST.get("quest_id")
+    id=request.POST.get("quest_id_repost")
     post=Posted_Question.objects.order_by('question_id').first()
     if post:
         post.question_id=id
@@ -49,8 +49,8 @@ def republish(request):
     post.save()
     return HttpResponseRedirect('/')
 def publish(request):
-    id=request.POST.get("quest_id")
-    print "id from form",id
+    id=request.POST.get("quest_id_post")
+    print "publish() id from form",id
     post=Posted_Question.objects.order_by('question_id').first()
     if post:
         post.question_id=id
@@ -109,19 +109,13 @@ def quiz(request):
         if form.is_valid():
             instance = form.save(commit=False)
             correct=request.POST.get('correct')
- #           print default_dict
             model=Question.objects.filter(id=int(request.POST.get('id')))
             if(model):
                 model.delete()
                 print "previous entry deleted"
-                # model.update(question= str(request.POST.get('question')),option_a=str(request.POST.get('option_a')),
-                #              option_b=str(request.POST.get('option_b')),option_c=str(request.POST.get('option_c')),
-                #              option_d=str(request.POST.get('option_d')),option_correct=str(request.POST.get('correct')),
-                #              image='uploads/'+str(request.POST.get('question')+'/'+str(request.FILES['image'].name))   
-                #             )
-            
-            print instance.question
+            #print "instance.question",request.POST.get('question')
             question_id = str(request.POST.get('id'))
+            instance.question = request.POST.get('question','')
             instance.option_correct=correct
             #bool,created=Question.objects.update_or_create(id=request.POST.get('id'),defaults=default_dict)
             form.save()
@@ -148,7 +142,6 @@ def quiz(request):
                     else:
                         create=Answer(question_id=question_id,user_name=request.user.username,answer=answer1)
                         create.save()
-                    #bool,created=Answer.objects.update_or_create(question_id=question_id,user_name=request.user.username,defaults={'answer':answer})
                 else:
                     model=Reposted_Answer.objects.filter(question_id=question_id).filter(user_name=request.user.username)
                     if(model):
@@ -163,34 +156,34 @@ def quiz(request):
                 submission='Your answer has submitted!!'
     if question:
         correct=Question.objects.filter(id=_id)[0].option_correct
-    option_a=Answer.objects.filter(answer='0').filter(question_id=_id)
-    for l in option_a:
-        list_a.append(str(l.user_name))
-    option_b=Answer.objects.filter(answer='1').filter(question_id=_id)
-    for l in option_b:
-        list_b.append(str(l.user_name))
+        option_a=Answer.objects.filter(answer='0').filter(question_id=_id)
+        for l in option_a:
+            list_a.append(str(l.user_name))
+        option_b=Answer.objects.filter(answer='1').filter(question_id=_id)
+        for l in option_b:
+            list_b.append(str(l.user_name))
 
-    option_c=Answer.objects.filter(answer='2').filter(question_id=_id)
-    for l in option_c:
-        list_c.append(str(l.user_name))
+        option_c=Answer.objects.filter(answer='2').filter(question_id=_id)
+        for l in option_c:
+            list_c.append(str(l.user_name))
 
-    option_d=Answer.objects.filter(answer='3').filter(question_id=_id)
-    for l in option_d:
-        list_d.append(str(l.user_name))
-    repost_a=Reposted_Answer.objects.filter(answer='0').filter(question_id=_id)
-    for l in repost_a:
-        re_list_a.append(str(l.user_name))
-    repost_b=Reposted_Answer.objects.filter(answer='1').filter(question_id=_id)
-    for l in repost_b:
-        re_list_b.append(str(l.user_name))
+        option_d=Answer.objects.filter(answer='3').filter(question_id=_id)
+        for l in option_d:
+            list_d.append(str(l.user_name))
+        repost_a=Reposted_Answer.objects.filter(answer='0').filter(question_id=_id)
+        for l in repost_a:
+            re_list_a.append(str(l.user_name))
+        repost_b=Reposted_Answer.objects.filter(answer='1').filter(question_id=_id)
+        for l in repost_b:
+            re_list_b.append(str(l.user_name))
 
-    repost_c=Reposted_Answer.objects.filter(answer='2').filter(question_id=_id)
-    for l in repost_c:
-        re_list_c.append(str(l.user_name))
+        repost_c=Reposted_Answer.objects.filter(answer='2').filter(question_id=_id)
+        for l in repost_c:
+            re_list_c.append(str(l.user_name))
 
-    repost_d=Reposted_Answer.objects.filter(answer='3').filter(question_id=_id)
-    for l in repost_d:
-        re_list_d.append(str(l.user_name))
+        repost_d=Reposted_Answer.objects.filter(answer='3').filter(question_id=_id)
+        for l in repost_d:
+            re_list_d.append(str(l.user_name))
     return render_to_response(
     'quiz.html',
     {'request':request,'form':form,'ques':ques,'submission':submission,'uploaded':uploaded,

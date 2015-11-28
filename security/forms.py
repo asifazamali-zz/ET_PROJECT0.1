@@ -64,10 +64,10 @@ from .models import Question,Answer
 #         exclude = ['user_name','docfile','privacy']
 
 class QuestionForm(forms.ModelForm):
-    #question = forms.CharField(widget=forms.Textarea,label='',required=False)
+    question = forms.CharField(widget=forms.Textarea,label='',required=False)
     class Meta:
         model= Question
-        fields = ['question','option_a','option_b','option_c','option_d','image']
+        fields = ['option_a','option_b','option_c','option_d','image']
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
